@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PM Performance Leaderboard — March 2026 MTD</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0b0f1a; color: #e0e0e0; padding: 28px 32px; min-height: 100vh; }
+    .header { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; flex-wrap: wrap; }
+    .header h1 { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+    .period-badge { background: #c43b31; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 4px; }
+    .subtitle { color: #7a8299; font-size: 13px; margin-bottom: 14px; line-height: 1.6; }
+    .badge-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .audit-badge { display: inline-flex; align-items: center; gap: 6px; background: #141925; border: 1px solid #2a3040; padding: 6px 14px; border-radius: 6px; font-size: 12px; color: #8bc34a; font-weight: 600; }
+    .audit-badge::before { content: "\2713"; font-weight: 800; }
+    .v2-badge { display: inline-flex; align-items: center; gap: 6px; background: #1a1040; border: 1px solid #4a3080; padding: 6px 14px; border-radius: 6px; font-size: 12px; color: #b388ff; font-weight: 600; }
+    .jira-badge { display: inline-flex; align-items: center; gap: 6px; background: #0d2220; border: 1px solid #1a5c2e; padding: 6px 14px; border-radius: 6px; font-size: 12px; color: #2ecc71; font-weight: 600; }
+    .feedback-badge { display: inline-flex; align-items: center; gap: 6px; background: #1a1520; border: 1px solid #4a2040; padding: 6px 14px; border-radius: 6px; font-size: 12px; color: #ffc107; font-weight: 600; }
+    .zone-legend { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+    .zone-chip { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; }
+    .zone-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .zone-dot.green { background: #1a8a3f; box-shadow: 0 0 6px rgba(26,138,63,0.4); }
+    .zone-dot.caution { background: #c59a14; box-shadow: 0 0 6px rgba(197,154,20,0.4); }
+    .zone-dot.red { background: #c43b31; box-shadow: 0 0 6px rgba(196,59,49,0.4); }
+    .zone-chip .zl { color: #7a8299; font-weight: 400; }
+    .main-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid #1c2233; padding-bottom: 0; }
+    .main-tab { background: transparent; border: none; color: #555d70; font-size: 13px; font-weight: 600; padding: 10px 18px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; font-family: inherit; }
+    .main-tab.active { color: #fff; border-bottom-color: #b388ff; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .scard { background: #141925; border: 1px solid #2a3040; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; }
+    .scard h2 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #2a3040; }
+    .zone-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 20px; }
+    .zone-card { background: #141925; border-radius: 12px; padding: 20px; position: relative; display: flex; flex-direction: column; }
+    .zone-card.green { border: 1px solid #1a8a3f; }
+    .zone-card.caution { border: 1px solid #c59a14; }
+    .zone-card.red { border: 1px solid #c43b31; }
+    .zone-card.onboarding { border: 1px solid #1565c0; }
+    .zone-badge { position: absolute; top: 12px; right: 12px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 3px; }
+    .zone-card.green .zone-badge { background: #0d2a15; color: #2ecc71; }
+    .zone-card.caution .zone-badge { background: #2d2200; color: #ffc107; }
+    .zone-card.red .zone-badge { background: #2d0a08; color: #e74c3c; }
+    .zone-card.onboarding .zone-badge { background: #0d1a2d; color: #64b5f6; }
+    .zc-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .zc-chip { font-size: 10px; color: #7a8299; margin-bottom: 10px; }
+    .zc-composite { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+    .zone-card.green .zc-composite { color: #2ecc71; }
+    .zone-card.caution .zc-composite { color: #ffc107; }
+    .zone-card.red .zc-composite { color: #e74c3c; }
+    .zone-card.onboarding .zc-composite { color: #64b5f6; }
+    .zc-delta { font-size: 10px; color: #7a8299; margin-bottom: 12px; }
+    .zc-pillars { display: grid; grid-template-columns: 1fr; gap: 6px; }
+    .zc-pillar { display: grid; grid-template-columns: 120px 1fr 32px 40px; align-items: center; gap: 6px; font-size: 11px; position: relative; }
+    .zc-pn { color: #8a93a8; font-weight: 500; }
+    .zc-bar { height: 6px; background: #1c2233; border-radius: 3px; overflow: hidden; }
+    .zc-bf { height: 100%; border-radius: 3px; }
+    .zc-bf.p1 { background: linear-gradient(90deg, #e74c3c, #ff6b6b); }
+    .zc-bf.p2 { background: linear-gradient(90deg, #3498db, #5dade2); }
+    .zc-bf.p3 { background: linear-gradient(90deg, #2ecc71, #58d68d); }
+    .zc-bf.p4 { background: linear-gradient(90deg, #9b59b6, #bb8fce); }
+    .zc-bf.p5 { background: linear-gradient(90deg, #f39c12, #f7c948); }
+    .zc-sc { font-weight: 700; font-size: 11px; text-align: right; }
+    .zc-wt { font-size: 9px; color: #555d70; text-align: right; }
+    .zc-insights { margin-top: 10px; padding-top: 10px; border-top: 1px solid #1c2233; flex: 1; display: flex; flex-direction: column; }
+    .zc-earning { font-size: 11px; color: #c8cdd8; line-height: 1.5; margin-bottom: 8px; }
+    .zc-path { font-size: 11px; color: #c8cdd8; line-height: 1.5; flex: 1; overflow-y: auto; padding-right: 4px; }
+    .zc-gate-flag { position: absolute; right: 0; top: -1px; font-size: 7px; font-weight: 700; color: #e74c3c; background: #2d0a08; padding: 1px 4px; border-radius: 2px; }
+    .ratchet-box { background: linear-gradient(135deg, #1a1040, #141925); border: 1px solid #4a3080; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; }
+    .ratchet-title { font-size: 12px; font-weight: 700; color: #b388ff; margin-bottom: 8px; }
+    .ratchet-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .ratchet-week { text-align: center; flex: 1; min-width: 80px; }
+    .ratchet-week .rw-label { font-size: 8px; color: #7a8299; text-transform: uppercase; letter-spacing: 0.5px; }
+    .ratchet-week .rw-val { font-size: 16px; font-weight: 800; color: #c8cdd8; }
+    .ratchet-week.current .rw-val { color: #b388ff; }
+    .ratchet-week.current { background: #1a1040; border-radius: 6px; padding: 6px 8px; border: 1px solid #4a3080; }
+    .ratchet-arrow { color: #555d70; font-size: 14px; }
+    .model-box { background: #141925; border: 1px solid #2a3040; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; }
+    .model-box-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #2a3040; }
+    .pillars-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
+    .pc { background: #0d1220; border-radius: 8px; padding: 14px; border-top: 3px solid #2a3040; }
+    .pc.p1 { border-color: #e74c3c; } .pc.p2 { border-color: #3498db; } .pc.p3 { border-color: #2ecc71; } .pc.p4 { border-color: #9b59b6; } .pc.p5 { border-color: #f39c12; }
+    .pc-title { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .pc-desc { font-size: 10px; color: #7a8299; line-height: 1.5; margin-bottom: 8px; }
+    .pc-weight { font-size: 10px; font-weight: 700; color: #b388ff; }
+    .cbar { font-size: 11px; color: #c8cdd8; background: #0d1220; padding: 10px 14px; border-radius: 6px; text-align: center; font-weight: 600; margin-bottom: 14px; }
+    .zone-method { background: #0d1220; border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+    .zone-method-title { font-size: 12px; font-weight: 700; color: #b388ff; margin-bottom: 8px; }
+    .zone-method-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 11px; }
+    .flag-card { background: #1a1a10; border-left: 3px solid #c59a14; padding: 10px 14px; border-radius: 6px; margin-bottom: 8px; font-size: 12px; color: #8a93a8; line-height: 1.6; }
+    .flag-card:last-child { margin-bottom: 0; }
+    .flag-name { color: #f1c40f; font-weight: 700; }
+    .flag-card.critical { border-color: #c43b31; background: #1a0a08; }
+    .flag-card.critical .flag-name { color: #e74c3c; }
+    .footer { font-size: 9px; color: #444d60; border-top: 1px solid #1c2233; padding-top: 12px; margin-top: 10px; line-height: 1.8; }
+    .expand-toggle { cursor: pointer; font-size: 11px; font-weight: 700; color: #b388ff; padding: 10px 16px; margin-top: auto; background: #1a1040; border: 1px solid #4a3080; border-radius: 6px; text-align: center; letter-spacing: 0.3px; transition: background 0.15s; flex-shrink: 0; }
+    .expand-toggle:hover { background: #241550; border-color: #6a40b0; color: #d4b8ff; }
+    .expand-body { display: none; margin-top: 10px; flex-shrink: 0; }
+    .expand-body.open { display: block; }
+    .chevron { font-size: 10px; transition: transform 0.2s; display: inline-block; margin-right: 4px; }
+    .pd-section { margin-top: 12px; border-top: 1px solid #1c2233; padding-top: 10px; }
+    .pd-section-title { font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+    .pd-section-title.p1 { color: #e74c3c; } .pd-section-title.p2 { color: #3498db; } .pd-section-title.p3 { color: #2ecc71; } .pd-section-title.p4 { color: #9b59b6; } .pd-section-title.p5 { color: #f39c12; }
+    .pd-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 11px; }
+    .pd-k { color: #7a8299; } .pd-v { color: #c8cdd8; font-weight: 600; text-align: right; }
+
+    /* ── Playbook Tab: Pipeline Stages ── */
+    .wf-pipeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-bottom: 20px; }
+    .wf-stage { text-align: center; padding: 16px 10px; position: relative; }
+    .wf-stage::after { content: "\25B6"; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); color: #2a3040; font-size: 14px; z-index: 1; }
+    .wf-stage:last-child::after { display: none; }
+    .wf-stage-name { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .wf-stage-desc { font-size: 9px; color: #7a8299; line-height: 1.4; }
+    .wf-stage-count { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+    .wf-s1 { background: #1a1520; border-radius: 8px 0 0 8px; } .wf-s1 .wf-stage-name { color: #e74c3c; }
+    .wf-s2 { background: #1a1a20; } .wf-s2 .wf-stage-name { color: #f39c12; }
+    .wf-s3 { background: #1a1a2d; } .wf-s3 .wf-stage-name { color: #9b59b6; }
+    .wf-s4 { background: #1a2a1a; } .wf-s4 .wf-stage-name { color: #2ecc71; }
+    .wf-s5 { background: #1a2a2a; border-radius: 0 8px 8px 0; } .wf-s5 .wf-stage-name { color: #3498db; }
+
+    /* ── Playbook Tab: Expandable Stage Details ── */
+    .step-detail { background: #141925; border: 1px solid #2a3040; border-radius: 10px; padding: 0; margin-bottom: 16px; overflow: hidden; }
+    .step-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; }
+    .step-header:hover { background: #1a2035; }
+    .step-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .step-num.s1 { background: #e74c3c; } .step-num.s2 { background: #f39c12; } .step-num.s3 { background: #9b59b6; } .step-num.s4 { background: #2ecc71; } .step-num.s5 { background: #3498db; }
+    .step-meta { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 700; color: #fff; }
+    .step-subtitle { font-size: 11px; color: #7a8299; margin-top: 2px; }
+    .step-body { padding: 0 20px 20px; display: none; }
+    .step-body.open { display: block; }
+    .step-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+    .step-box { background: #0d1220; border-radius: 8px; padding: 14px; }
+    .step-box-title { font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+    .step-box ul { font-size: 11px; color: #8a93a8; line-height: 1.8; list-style: none; padding: 0; }
+    .step-box ul li::before { content: "\2022"; color: #555d70; margin-right: 6px; }
+    .step-box ul li.success::before { content: "\2713"; color: #2ecc71; }
+    .step-box ul li.fail::before { content: "\2717"; color: #e74c3c; }
+
+    /* ── Playbook Tab: Claude Skill Cards ── */
+    .skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .skill-card { background: #0f1628; border: 1px solid #2a3040; border-radius: 8px; padding: 12px; display: flex; gap: 10px; align-items: flex-start; }
+    .skill-card.installed { border-color: #1a5c2e; }
+    .skill-card.available { border-color: #3a3060; }
+    .skill-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+    .skill-icon.pm { background: #1a2a44; color: #4a90d9; }
+    .skill-icon.design { background: #2a1a3a; color: #b388ff; }
+    .skill-icon.eng { background: #1a2a1a; color: #2ecc71; }
+    .skill-icon.ops { background: #2a2a1a; color: #f39c12; }
+    .skill-icon.data { background: #1a2a2a; color: #3498db; }
+    .skill-icon.jiffy { background: #2d0a08; color: #e74c3c; }
+    .skill-meta { flex: 1; min-width: 0; }
+    .skill-name { font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .skill-cmd { font-size: 9px; font-family: monospace; color: #b388ff; background: #1a1040; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-bottom: 4px; }
+    .skill-desc { font-size: 9px; color: #7a8299; line-height: 1.4; }
+    .skill-badge { font-size: 8px; font-weight: 700; padding: 1px 6px; border-radius: 2px; display: inline-block; margin-left: 6px; }
+    .skill-badge.installed { background: #0d2a15; color: #2ecc71; }
+    .skill-badge.download { background: #1a1040; color: #b388ff; }
+
+    @media (max-width: 900px) { .pillars-row, .wf-pipeline { grid-template-columns: 1fr; } .zone-grid { grid-template-columns: 1fr; } .step-grid, .skill-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h1>PM Performance Leaderboard</h1>
+    <span class="period-badge">March 2026 MTD &middot; Mar 1 – Mar 31, 2026</span>
+</div>
+<div class="subtitle">Zone-based scoring &mdash; benchmarked against top performer, not ordinal ranking. Strategic alignment first, velocity last. 5 PMs driving P100 &amp; Chip initiatives.</div>
+<div class="badge-row">
+    <span class="audit-badge">Data Audited &nbsp; 2026-04-02</span>
+    <span class="v2-badge">Zone-Based &middot; Strategic-Alignment-First &middot; Efficiency Ratchet</span>
+    <span class="jira-badge">&#9679; Jira Live &middot; 100 issues &middot; 8 projects &middot; 2026-04-02</span>
+    <span class="feedback-badge">CPO + COO Feedback Integrated &middot; 2026-04-02</span>
+</div>
+
+<!-- ZONE LEGEND -->
+<div class="zone-legend">
+    <div class="zone-chip"><span class="zone-dot green"></span> Green Zone <span class="zl">&mdash; within 1&sigma; of top performer</span></div>
+    <div class="zone-chip"><span class="zone-dot caution"></span> Cautionary <span class="zl">&mdash; 1&ndash;2&sigma; below top performer</span></div>
+    <div class="zone-chip"><span class="zone-dot red"></span> Red Zone <span class="zl">&mdash; &gt;2&sigma; below or gate breach</span></div>
+    <div class="zone-chip"><span class="zone-dot" style="background:#1565c0;box-shadow:0 0 6px rgba(21,101,192,0.4);"></span> Onboarding <span class="zl">&mdash; new PM, tracking only</span></div>
+</div>
+
+<!-- TAB NAVIGATION -->
+<div class="main-tabs">
+    <button class="main-tab active" onclick="switchTab('dashboard')">Dashboard</button>
+    <button class="main-tab" onclick="switchTab('pipeline')">PM Playbook</button>
+    <button class="main-tab" onclick="switchTab('objectives')">GM Backlog</button>
+    <button class="main-tab" onclick="switchTab('results')">Results</button>
+</div>
+
+<!-- TAB 1: DASHBOARD -->
+<div id="tab-dashboard" class="tab-content active">
+
+
+    <div style="background:linear-gradient(135deg,#0d1220 0%,#141925 100%);border:1px solid #2a3040;border-radius:10px;padding:16px 20px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="font-size:14px;font-weight:800;color:#fff;">March 2026 MTD &mdash; Engineering Feed Health</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+            <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Eng Target</div><div style="font-size:28px;font-weight:800;color:#fff;">4,400</div><div style="font-size:9px;color:#555d70;">SP capacity</div></div>
+            <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Eng Delivered (MTD)</div><div style="font-size:28px;font-weight:800;color:#2ecc71;">3,429</div><div style="font-size:9px;color:#555d70;">78% &middot; <span style="color:#2ecc71;">on pace</span></div></div>
+            <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">PM SP Authored</div><div style="font-size:28px;font-weight:800;color:#e74c3c;">1,101</div><div style="font-size:9px;color:#555d70;">25% of target &middot; <span style="color:#e74c3c;">critical gap</span></div></div>
+            <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Top PM Share</div><div style="font-size:28px;font-weight:800;color:#ffc107;">95%</div><div style="font-size:9px;color:#555d70;">1,049 of 1,101 SP</div></div>
+            <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Feed Buffer</div><div style="font-size:28px;font-weight:800;color:#e74c3c;">0.66x</div><div style="font-size:9px;color:#555d70;">Target: 1.5–2.0x</div></div>
+        </div>
+    </div>
+
+    <div class="model-box">
+        <div class="model-box-title">Scoring Model &mdash; Zone-Based &middot; Strategic-Alignment-First &middot; Efficiency Ratchet</div>
+        <div class="zone-method">
+            <div class="zone-method-title">Zone Classification (Not Ordinal Ranking)</div>
+            <div class="zone-method-row"><span class="zone-dot green" style="flex-shrink:0;"></span> <span style="color:#2ecc71;font-weight:600;">Green Zone:</span> <span style="color:#c8cdd8;">Composite &ge; (Top Performer &minus; 1&sigma;). Currently &ge;65.7.</span></div>
+            <div class="zone-method-row"><span class="zone-dot caution" style="flex-shrink:0;"></span> <span style="color:#ffc107;font-weight:600;">Cautionary:</span> <span style="color:#c8cdd8;">Composite between (Top &minus; 2&sigma;) and (Top &minus; 1&sigma;). Currently 48.1&ndash;65.60000000000001.</span></div>
+            <div class="zone-method-row"><span class="zone-dot red" style="flex-shrink:0;"></span> <span style="color:#e74c3c;font-weight:600;">Red Zone:</span> <span style="color:#c8cdd8;">Composite &lt; (Top &minus; 2&sigma;), or any pillar gate breach. Currently &lt;48.1.</span></div>
+            <div style="font-size:10px;color:#b388ff;margin-top:8px;"><strong>Efficiency Ratchet:</strong> Green zone floor rises 5% per week. Technology and tooling are improving &mdash; so should PM output.</div>
+        </div>
+        <div class="pillars-row">
+        <div class="pc p1">
+            <div class="pc-title">Strategic Alignment</div>
+            <div class="pc-desc">Are they working on the right things? Work tied to monthly business directives, P100 contribution, initiative coverage.</div>
+            <div class="pc-weight">30% &middot; Gate: &ge;50</div>
+        </div>
+        <div class="pc p2">
+            <div class="pc-title">PRD Quality &amp; Decision Rigor</div>
+            <div class="pc-desc">Exec Prompt Review score, GStack hardening passes, decision audit trail completeness, eng acceptance rate, prototypes.</div>
+            <div class="pc-weight">25% &middot; Gate: &ge;55</div>
+        </div>
+        <div class="pc p3">
+            <div class="pc-title">Pipeline Health</div>
+            <div class="pc-desc">Backlog depth (weeks remaining), intake-to-output ratio, stale item rate. Is there enough work queued to feed engineering?</div>
+            <div class="pc-weight">20% &middot; Gate: &ge;50</div>
+        </div>
+        <div class="pc p4">
+            <div class="pc-title">AI Leverage &amp; Efficiency</div>
+            <div class="pc-desc">Sessions/day, tokens consumed, prototypes generated, Tokens/SP ratio. AI tooling is table stakes for 10x output.</div>
+            <div class="pc-weight">15% &middot; Gate: &ge;40</div>
+        </div>
+        <div class="pc p5">
+            <div class="pc-title">Velocity &amp; Throughput</div>
+            <div class="pc-desc">PRDs shipped, SP estimated via skill, cycle time. Deliberately lowest weight — volume can be gamed, impact cannot.</div>
+            <div class="pc-weight">10% &middot; Gate: &ge;40</div>
+        </div>
+        </div>
+        <div class="cbar">COMPOSITE = (0.30 &times; Strategic Alignment) + (0.25 &times; PRD Quality &amp; Decision Rigor) + (0.20 &times; Pipeline Health) + (0.15 &times; AI Leverage &amp; Efficiency) + (0.10 &times; Velocity &amp; Throughput)</div>
+        <div style="background:#1a1520;border:1px solid #2a2040;border-radius:6px;padding:12px;">
+            <div style="font-size:11px;font-weight:700;color:#e74c3c;margin-bottom:6px;">ANTI-GAMING SAFEGUARDS</div>
+            <div style="font-size:10px;color:#7a8299;line-height:1.7;">
+            &bull; Hollow tickets (no description or &lt;50 chars) excluded &middot;
+            &bull; SP inflation &gt;3σ from team mean = flagged &middot;
+            &bull; Bug-heavy ratio &gt;50% = Strategic Alignment penalty &middot;
+            &bull; Exec Prompt Review not run = −15 pts from PRD Quality &middot;
+            &bull; PRD in &quot;Needs Rework&quot; &gt;7d = PRD Quality capped at 70 &middot;
+            &bull; Superficial AI sessions (&lt;5 min) excluded &middot;
+            &bull; High ticket count + zero strategic initiative coverage = flag &middot;
+            &bull; Decision audit trail missing = −10 from PRD Quality &middot;
+            &bull; Zero GStack passes on any PRD = pillar cap at 60 &middot;
+            
+            </div>
+        </div>
+    </div>
+
+<!-- ZONE CARDS -->
+<div class="zone-grid">
+
+    <div class="zone-card green">
+        <span class="zone-badge">Green Zone</span>
+        <div class="zc-name">Jay Patil</div>
+        <div class="zc-chip">Chip 2 + 6 · Imaging + Retention/P100</div>
+        <div class="zc-composite">83.4</div>
+        <div class="zc-delta">Top Performer &middot; Benchmark</div>
+        <div class="zc-pillars">
+            <div class="zc-pillar"><span class="zc-pn">Strategic Align.</span><div class="zc-bar"><div class="zc-bf p1" style="width:88%"></div></div><span class="zc-sc" style="color:#ff6b6b;">88</span><span class="zc-wt">+26.4</span></div>
+            <div class="zc-pillar"><span class="zc-pn">PRD & Decisions</span><div class="zc-bar"><div class="zc-bf p2" style="width:78%"></div></div><span class="zc-sc" style="color:#5dade2;">78</span><span class="zc-wt">+19.5</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Pipeline Health</span><div class="zc-bar"><div class="zc-bf p3" style="width:90%"></div></div><span class="zc-sc" style="color:#58d68d;">90</span><span class="zc-wt">+18.0</span></div>
+            <div class="zc-pillar"><span class="zc-pn">AI Leverage</span><div class="zc-bar"><div class="zc-bf p4" style="width:75%"></div></div><span class="zc-sc" style="color:#bb8fce;">75</span><span class="zc-wt">+11.2</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Velocity</span><div class="zc-bar"><div class="zc-bf p5" style="width:82%"></div></div><span class="zc-sc" style="color:#f7c948;">82</span><span class="zc-wt">+8.2</span></div>
+        </div>
+        <div class="zc-insights">
+            <div class="zc-earning"><span style="color:#2ecc71;font-weight:700;">What&rsquo;s earning the score:</span> Dominant SP output (1,049 — 95% of team), 16 P100 epics (team-leading), AI Auditing PRD at Go-Live, strong chip coverage across Imaging + Retention.</div>
+            <div class="zc-path"><span style="color:#ffc107;font-weight:700;">Path to 100:</span> Run the Exec Prompt on all 3 PRDs (currently taking the −15 penalty). Start the decision audit trail. Increase GStack hardening passes — 3 PRDs with deeper review rigor would push PRD Quality from 78 toward 90+. Image experience CVR and AI audit replacement % (Chip 2 KPIs) need measurable movement to close the Outcome gap.</div>
+        </div>
+        <div class="expand-toggle" onclick="toggleAllDetails()"><span class="chevron">&#9660;</span> Performance Details</div>
+        <div class="expand-body">
+            <div class="pd-section"><div class="pd-section-title p1">Strategic Alignment (30%): 88</div><div class="pd-kv"><span class="pd-k">P100 Epics</span><span class="pd-v">16 (team-leading)</span><span class="pd-k">Strategic Initiatives</span><span class="pd-v">AI Auditing, Retention</span><span class="pd-k">Chip Coverage</span><span class="pd-v">2 Chips</span><span class="pd-k">Work-to-Priority Match</span><span class="pd-v">High</span><span class="pd-k">Jira Chip Issues</span><span class="pd-v">Chip 2 (4) + Chip 6 (5)</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p2">PRD Quality & Decision Rigor (25%): 78</div><div class="pd-kv"><span class="pd-k">PRDs Authored</span><span class="pd-v">3</span><span class="pd-k">Exec Prompt Avg</span><span class="pd-v">— (-15 penalty)</span><span class="pd-k">GStack Passes Avg</span><span class="pd-v">~3</span><span class="pd-k">Decision Log</span><span class="pd-v">Not started</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p3">Pipeline Health (20%): 90</div><div class="pd-kv"><span class="pd-k">SP Authored</span><span class="pd-v">1,049</span><span class="pd-k">SP Pipeline</span><span class="pd-v">142+</span><span class="pd-k">Epics Total</span><span class="pd-v">44</span><span class="pd-k">Backlog Depth</span><span class="pd-v">4+ weeks</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p4">AI Leverage & Efficiency (15%): 75</div><div class="pd-kv"><span class="pd-k">AI Sessions</span><span class="pd-v">30</span><span class="pd-k">Tokens</span><span class="pd-v">890K</span><span class="pd-k">Tokens/SP</span><span class="pd-v">849</span><span class="pd-k">Prototypes</span><span class="pd-v">tbd</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p5">Velocity & Throughput (10%): 82</div><div class="pd-kv"><span class="pd-k">Tickets Created</span><span class="pd-v">45</span><span class="pd-k">Tickets Closed</span><span class="pd-v">17</span><span class="pd-k">Cycle Time</span><span class="pd-v">tbd</span><span class="pd-k">SP via Estimator</span><span class="pd-v">pending</span></div></div>
+        </div>
+    </div>
+    <div class="zone-card green">
+        <span class="zone-badge">Green Zone</span>
+        <div class="zc-name">Kyle Bimm</div>
+        <div class="zc-chip">Chip 2 · Imaging &amp; Artwork</div>
+        <div class="zc-composite">76.8</div>
+        <div class="zc-delta">&minus;6.6 from benchmark &middot; 0.4&sigma; below</div>
+        <div class="zc-pillars">
+            <div class="zc-pillar"><span class="zc-pn">Strategic Align.</span><div class="zc-bar"><div class="zc-bf p1" style="width:72%"></div></div><span class="zc-sc" style="color:#ff6b6b;">72</span><span class="zc-wt">+21.6</span></div>
+            <div class="zc-pillar"><span class="zc-pn">PRD & Decisions</span><div class="zc-bar"><div class="zc-bf p2" style="width:75%"></div></div><span class="zc-sc" style="color:#5dade2;">75</span><span class="zc-wt">+18.8</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Pipeline Health</span><div class="zc-bar"><div class="zc-bf p3" style="width:76%"></div></div><span class="zc-sc" style="color:#58d68d;">76</span><span class="zc-wt">+15.2</span></div>
+            <div class="zc-pillar"><span class="zc-pn">AI Leverage</span><div class="zc-bar"><div class="zc-bf p4" style="width:88%"></div></div><span class="zc-sc" style="color:#bb8fce;">88</span><span class="zc-wt">+13.2</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Velocity</span><div class="zc-bar"><div class="zc-bf p5" style="width:80%"></div></div><span class="zc-sc" style="color:#f7c948;">80</span><span class="zc-wt">+8.0</span></div>
+        </div>
+        <div class="zc-insights">
+            <div class="zc-earning"><span style="color:#2ecc71;font-weight:700;">What&rsquo;s earning the score:</span> Team-leading AI adoption (42 sessions / 1.2M tokens), Image Pipeline ownership (Chip 2 backbone), 5 PRDs, 301 SP delivered through eng, 7 initiatives created.</div>
+            <div class="zc-path"><span style="color:#ffc107;font-weight:700;">Path to 100:</span> PM-authored SP is critically low (29 vs. fair share of 880) — specs are flowing to eng but the authored pipeline needs to scale 5x. Run the Exec Prompt (taking −15 penalty on all PRDs). Start the decision audit trail. The gap to Jay is almost entirely in Strategic Alignment (72 vs. 88) — tie more work directly to redraw automation rate and image experience CVR (Chip 2 KPIs).</div>
+        </div>
+        <div class="expand-toggle" onclick="toggleAllDetails()"><span class="chevron">&#9660;</span> Performance Details</div>
+        <div class="expand-body">
+            <div class="pd-section"><div class="pd-section-title p1">Strategic Alignment (30%): 72</div><div class="pd-kv"><span class="pd-k">P100 Epics</span><span class="pd-v">0</span><span class="pd-k">Strategic Initiatives</span><span class="pd-v">Image Pipeline (owner)</span><span class="pd-k">Chip Coverage</span><span class="pd-v">1 Chip</span><span class="pd-k">Work-to-Priority Match</span><span class="pd-v">Medium-High</span><span class="pd-k">Jira Chip Issues</span><span class="pd-v">Chip 2 (4 issues, 8 SP)</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p2">PRD Quality & Decision Rigor (25%): 75</div><div class="pd-kv"><span class="pd-k">PRDs Authored</span><span class="pd-v">5</span><span class="pd-k">Exec Prompt Avg</span><span class="pd-v">— (-15 penalty)</span><span class="pd-k">GStack Passes Avg</span><span class="pd-v">~2</span><span class="pd-k">Decision Log</span><span class="pd-v">Not started</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p3">Pipeline Health (20%): 76</div><div class="pd-kv"><span class="pd-k">SP Authored</span><span class="pd-v">29</span><span class="pd-k">SP Delivered (Eng)</span><span class="pd-v">301</span><span class="pd-k">Epics Total</span><span class="pd-v">19</span><span class="pd-k">Initiatives</span><span class="pd-v">7</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p4">AI Leverage & Efficiency (15%): 88</div><div class="pd-kv"><span class="pd-k">AI Sessions</span><span class="pd-v">42 (team-leading)</span><span class="pd-k">Tokens</span><span class="pd-v">1.2M</span><span class="pd-k">PRD-to-Prototype</span><span class="pd-v">Owner</span><span class="pd-k">Prototypes</span><span class="pd-v">tbd</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p5">Velocity & Throughput (10%): 80</div><div class="pd-kv"><span class="pd-k">Tickets Created</span><span class="pd-v">89</span><span class="pd-k">Tickets Closed</span><span class="pd-v">37</span><span class="pd-k">Resolution Rate</span><span class="pd-v">42%</span><span class="pd-k">Bugs Filed</span><span class="pd-v">12</span></div></div>
+        </div>
+    </div>
+    <div class="zone-card green">
+        <span class="zone-badge">Green Zone</span>
+        <div class="zc-name">Ryan Widgeon</div>
+        <div class="zc-chip">Chip 1 + 4 · Print + Wallet Share</div>
+        <div class="zc-composite">76.8</div>
+        <div class="zc-delta">&minus;6.6 from benchmark &middot; 0.4&sigma; below</div>
+        <div class="zc-pillars">
+            <div class="zc-pillar"><span class="zc-pn">Strategic Align.</span><div class="zc-bar"><div class="zc-bf p1" style="width:74%"></div></div><span class="zc-sc" style="color:#ff6b6b;">74</span><span class="zc-wt">+22.2</span></div>
+            <div class="zc-pillar"><span class="zc-pn">PRD & Decisions</span><div class="zc-bar"><div class="zc-bf p2" style="width:88%"></div></div><span class="zc-sc" style="color:#5dade2;">88</span><span class="zc-wt">+22.0</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Pipeline Health</span><div class="zc-bar"><div class="zc-bf p3" style="width:72%"></div></div><span class="zc-sc" style="color:#58d68d;">72</span><span class="zc-wt">+14.4</span></div>
+            <div class="zc-pillar"><span class="zc-pn">AI Leverage</span><div class="zc-bar"><div class="zc-bf p4" style="width:65%"></div></div><span class="zc-sc" style="color:#bb8fce;">65</span><span class="zc-wt">+9.8</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Velocity</span><div class="zc-bar"><div class="zc-bf p5" style="width:84%"></div></div><span class="zc-sc" style="color:#f7c948;">84</span><span class="zc-wt">+8.4</span></div>
+        </div>
+        <div class="zc-insights">
+            <div class="zc-earning"><span style="color:#2ecc71;font-weight:700;">What&rsquo;s earning the score:</span> Highest PRD quality on the team — only PM to run Exec Prompt (8.9/10), most PRDs authored (8), strongest GStack adoption (~4 passes avg). Process discipline is the model for the team.</div>
+            <div class="zc-path"><span style="color:#ffc107;font-weight:700;">Path to 100:</span> 69% bug ratio is dragging Strategic Alignment (74) — shift from reactive bug triage toward proactive Chip 1 (Print CVR, gross margin) and Chip 4 (cross-sell CVR, attach rate) initiative work. Increase AI usage (20 sessions vs. Kyle&#x27;s 42) — double it and use AI to prototype the wallet share experience. PM-authored SP (23) needs to scale dramatically to feed engineering at fair share.</div>
+        </div>
+        <div class="expand-toggle" onclick="toggleAllDetails()"><span class="chevron">&#9660;</span> Performance Details</div>
+        <div class="expand-body">
+            <div class="pd-section"><div class="pd-section-title p1">Strategic Alignment (30%): 74</div><div class="pd-kv"><span class="pd-k">P100 Epics</span><span class="pd-v">0</span><span class="pd-k">Strategic Initiatives</span><span class="pd-v">Hats, Print</span><span class="pd-k">Chip Coverage</span><span class="pd-v">2 Chips</span><span class="pd-k">Bug-to-Spec Ratio</span><span class="pd-v">69% (reactive)</span><span class="pd-k">Jira Chip Issues</span><span class="pd-v">Chip 1 (2) + Chip 4 (1)</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p2">PRD Quality & Decision Rigor (25%): 88</div><div class="pd-kv"><span class="pd-k">PRDs Authored</span><span class="pd-v">8 (team-leading)</span><span class="pd-k">Exec Prompt Avg</span><span class="pd-v">8.9/10</span><span class="pd-k">GStack Passes Avg</span><span class="pd-v">~4</span><span class="pd-k">Keith PRDs Inherited</span><span class="pd-v">3</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p3">Pipeline Health (20%): 72</div><div class="pd-kv"><span class="pd-k">SP Authored</span><span class="pd-v">23</span><span class="pd-k">SP Pipeline (PRDs)</span><span class="pd-v">461+</span><span class="pd-k">Stale Epics (&gt;14d)</span><span class="pd-v">2</span><span class="pd-k">Epics Total</span><span class="pd-v">12</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p4">AI Leverage & Efficiency (15%): 65</div><div class="pd-kv"><span class="pd-k">AI Sessions</span><span class="pd-v">20</span><span class="pd-k">Tokens</span><span class="pd-v">520K</span><span class="pd-k">Exec Prompt Usage</span><span class="pd-v">Yes (only PM)</span><span class="pd-k">Prototypes</span><span class="pd-v">tbd</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p5">Velocity & Throughput (10%): 84</div><div class="pd-kv"><span class="pd-k">Tickets Created</span><span class="pd-v">85</span><span class="pd-k">Tickets Closed</span><span class="pd-v">41</span><span class="pd-k">Resolution Rate</span><span class="pd-v">48%</span><span class="pd-k">Bugs Filed</span><span class="pd-v">59</span></div></div>
+        </div>
+    </div>
+    <div class="zone-card caution">
+        <span class="zone-badge">Cautionary</span>
+        <div class="zc-name">Sebastian Vera</div>
+        <div class="zc-chip">Chip 5 · Site Perf &amp; Reliability</div>
+        <div class="zc-composite">64.3</div>
+        <div class="zc-delta">&minus;19.1 from benchmark &middot; 1.1&sigma; below</div>
+        <div class="zc-pillars">
+            <div class="zc-pillar"><span class="zc-pn">Strategic Align.</span><div class="zc-bar"><div class="zc-bf p1" style="width:65%"></div></div><span class="zc-sc" style="color:#ff6b6b;">65</span><span class="zc-wt">+19.5</span></div>
+            <div class="zc-pillar"><span class="zc-pn">PRD & Decisions</span><div class="zc-bar"><div class="zc-bf p2" style="width:70%"></div></div><span class="zc-sc" style="color:#5dade2;">70</span><span class="zc-wt">+17.5</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Pipeline Health</span><div class="zc-bar"><div class="zc-bf p3" style="width:66%"></div></div><span class="zc-sc" style="color:#58d68d;">66</span><span class="zc-wt">+13.2</span></div>
+            <div class="zc-pillar"><span class="zc-pn">AI Leverage</span><div class="zc-bar"><div class="zc-bf p4" style="width:42%"></div></div><span class="zc-sc" style="color:#bb8fce;">42</span><span class="zc-wt">+6.3</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Velocity</span><div class="zc-bar"><div class="zc-bf p5" style="width:78%"></div></div><span class="zc-sc" style="color:#f7c948;">78</span><span class="zc-wt">+7.8</span></div>
+        </div>
+        <div class="zc-insights">
+            <div class="zc-earning"><span style="color:#2ecc71;font-weight:700;">What&rsquo;s earning the score:</span> Highest resolution rate on the team (70%), Notification System PRD is exceptionally thorough, 5 PRDs total, 225+ SP delivered through eng. Strong work product depth when engaged.</div>
+            <div class="zc-path"><span style="color:#ffc107;font-weight:700;">Path to 100:</span> Three critical blockers. (1) AI adoption is a gate breach (5 sessions / 110K tokens) — needs 10x increase; pair with Kyle for knowledge transfer post-OOO. (2) BH-1 PRD stuck in &quot;Needs Rework&quot; with an open P0 — resolve this immediately upon return Apr 7. (3) Zero PM-authored SP — CST automation target updated to 40% by Wk 4, 60% by Wk 8 per PRD V7 (CPO locked Apr 2). PO-2901 (Feed Pipeline, 222 SP) and PO-2954 (Lost-in-Transit) both in Backlog — need to move to In Progress. Run the Exec Prompt on all active PRDs.</div>
+        </div>
+        <div class="expand-toggle" onclick="toggleAllDetails()"><span class="chevron">&#9660;</span> Performance Details</div>
+        <div class="expand-body">
+            <div class="pd-section"><div class="pd-section-title p1">Strategic Alignment (30%): 65</div><div class="pd-kv"><span class="pd-k">P100 Epics</span><span class="pd-v">0</span><span class="pd-k">Strategic Initiatives</span><span class="pd-v">BH-1 (rework), Notifications</span><span class="pd-k">Bug Ratio</span><span class="pd-v">67%</span><span class="pd-k">Work-to-Priority Match</span><span class="pd-v">Medium</span><span class="pd-k">Jira Chip Issues</span><span class="pd-v">Chip 5 (2 epics, 222 SP)</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p2">PRD Quality & Decision Rigor (25%): 70</div><div class="pd-kv"><span class="pd-k">PRDs Authored</span><span class="pd-v">5</span><span class="pd-k">Exec Prompt Avg</span><span class="pd-v">— (-15 penalty)</span><span class="pd-k">BH-1 Gate</span><span class="pd-v">Needs Rework (P0)</span><span class="pd-k">PRD Tracker</span><span class="pd-v">Owner</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p3">Pipeline Health (20%): 66</div><div class="pd-kv"><span class="pd-k">SP Authored</span><span class="pd-v">0</span><span class="pd-k">SP Delivered (Eng)</span><span class="pd-v">225+</span><span class="pd-k">SP Pipeline (PRDs)</span><span class="pd-v">502+</span><span class="pd-k">Epics Total</span><span class="pd-v">8</span><span class="pd-k">Jira: PO-2901</span><span class="pd-v">222 SP (Feed Pipeline)</span><span class="pd-k">Jira: PO-2954</span><span class="pd-v">Lost-in-Transit Detection</span><span class="pd-k">Chip 5 Jira Issues</span><span class="pd-v">2 epics (both Backlog)</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p4">AI Leverage & Efficiency (15%): 42</div><div class="pd-kv"><span class="pd-k">AI Sessions</span><span class="pd-v">5</span><span class="pd-k">Tokens</span><span class="pd-v">110K</span><span class="pd-k">Prototypes</span><span class="pd-v">0</span><span class="pd-k">BH-1 Rework</span><span class="pd-v">P0 Open</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p5">Velocity & Throughput (10%): 78</div><div class="pd-kv"><span class="pd-k">Tickets Created</span><span class="pd-v">60</span><span class="pd-k">Tickets Closed</span><span class="pd-v">42</span><span class="pd-k">Resolution Rate</span><span class="pd-v">70% (highest)</span><span class="pd-k">Bugs Filed</span><span class="pd-v">40</span></div></div>
+        </div>
+    </div>
+    <div class="zone-card onboarding">
+        <span class="zone-badge">Onboarding</span>
+        <div class="zc-name">Sabby Singh</div>
+        <div class="zc-chip">Chip 3 + 6 · Delivery + Retention &middot; <span style="color:#64b5f6;">Day 7 &mdash; Ramping</span></div>
+        <div class="zc-composite">39.0</div>
+        <div class="zc-delta">Day 7 &middot; Baseline checkpoint April 30 &middot; Scores are tracking only</div>
+        <div class="zc-pillars">
+            <div class="zc-pillar"><span class="zc-pn">Strategic Align.</span><div class="zc-bar"><div class="zc-bf p1" style="width:45%"></div></div><span class="zc-sc" style="color:#ff6b6b;">45</span><span class="zc-wt">+13.5</span><span class="zc-gate-flag">GATE</span></div>
+            <div class="zc-pillar"><span class="zc-pn">PRD & Decisions</span><div class="zc-bar"><div class="zc-bf p2" style="width:38%"></div></div><span class="zc-sc" style="color:#5dade2;">38</span><span class="zc-wt">+9.5</span><span class="zc-gate-flag">GATE</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Pipeline Health</span><div class="zc-bar"><div class="zc-bf p3" style="width:50%"></div></div><span class="zc-sc" style="color:#58d68d;">50</span><span class="zc-wt">+10.0</span></div>
+            <div class="zc-pillar"><span class="zc-pn">AI Leverage</span><div class="zc-bar"><div class="zc-bf p4" style="width:20%"></div></div><span class="zc-sc" style="color:#bb8fce;">20</span><span class="zc-wt">+3.0</span><span class="zc-gate-flag">GATE</span></div>
+            <div class="zc-pillar"><span class="zc-pn">Velocity</span><div class="zc-bar"><div class="zc-bf p5" style="width:30%"></div></div><span class="zc-sc" style="color:#f7c948;">30</span><span class="zc-wt">+3.0</span><span class="zc-gate-flag">GATE</span></div>
+        </div>
+        <div class="zc-insights">
+            <div class="zc-earning"><span style="color:#2ecc71;font-weight:700;">What&rsquo;s earning the score:</span> Day 7 — red zone is expected during onboarding. 98 inherited tickets give a foundation to learn from; daily syncs are active; Seb OOO proxy in place. License Plate PRD started in first week.</div>
+            <div class="zc-path"><span style="color:#ffc107;font-weight:700;">Path to 100:</span> (1) Get License Plate PRD through rework and GStack by Apr 14. (2) Start 2 new PRDs in STRUCTURE mapped to Chip 3 KPIs (on-time delivery %, carrier cost, Printer Portal adoption). (3) Minimum 10 AI sessions by Apr 14 — zero right now. (4) Run the Exec Prompt and start the decision audit trail. Goal: Cautionary by Day 30, Green by Day 60.</div>
+        </div>
+        <div class="expand-toggle" onclick="toggleAllDetails()"><span class="chevron">&#9660;</span> Performance Details</div>
+        <div class="expand-body">
+            <div class="pd-section"><div class="pd-section-title p1">Strategic Alignment (30%): 45 <span style="color:#e74c3c;font-size:9px;">GATE</span></div><div class="pd-kv"><span class="pd-k">P100 Epics</span><span class="pd-v">0</span><span class="pd-k">Inherited Portfolio</span><span class="pd-v">98 tickets</span><span class="pd-k">Reporter-Created</span><span class="pd-v">0</span><span class="pd-k">Days Since Joining</span><span class="pd-v">7</span><span class="pd-k">Jira Chip Issues</span><span class="pd-v">Chip 3 (4) + Chip 6 (5)</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p2">PRD Quality & Decision Rigor (25%): 38 <span style="color:#e74c3c;font-size:9px;">GATE</span></div><div class="pd-kv"><span class="pd-k">PRDs Authored</span><span class="pd-v">1</span><span class="pd-k">License Plate Gate</span><span class="pd-v">Needs Rework</span><span class="pd-k">Exec Prompt</span><span class="pd-v">— (-15 penalty)</span><span class="pd-k">Next PRDs</span><span class="pd-v">2 planned</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p3">Pipeline Health (20%): 50</div><div class="pd-kv"><span class="pd-k">SP Authored</span><span class="pd-v">0</span><span class="pd-k">SP Pipeline</span><span class="pd-v">&lt;55</span><span class="pd-k">Seb OOO Proxy</span><span class="pd-v">Active</span><span class="pd-k">Daily Syncs</span><span class="pd-v">Active</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p4">AI Leverage & Efficiency (15%): 20 <span style="color:#e74c3c;font-size:9px;">GATE</span></div><div class="pd-kv"><span class="pd-k">AI Sessions</span><span class="pd-v">0</span><span class="pd-k">Tokens</span><span class="pd-v">0</span><span class="pd-k">Prototypes</span><span class="pd-v">0</span><span class="pd-k">Onboarding</span><span class="pd-v">Week 1</span></div></div>
+            <div class="pd-section"><div class="pd-section-title p5">Velocity & Throughput (10%): 30 <span style="color:#e74c3c;font-size:9px;">GATE</span></div><div class="pd-kv"><span class="pd-k">Tickets Created</span><span class="pd-v">0</span><span class="pd-k">Tickets Assigned</span><span class="pd-v">98 (inherited)</span><span class="pd-k">Baseline Checkpoint</span><span class="pd-v">April 30</span><span class="pd-k">Chip Coverage</span><span class="pd-v">2 Chips</span></div></div>
+        </div>
+    </div>
+</div>
+
+
+    <div class="scard">
+        <h2>Flags &amp; Anomalies</h2>
+        <div class="flag-card critical"><span class="flag-name">Activity Without Impact Risk:</span> The scoring model specifically detects high activity volume with low strategic output. PMs are measured on whether their work aligns with monthly business directives — not just ticket counts. High ticket volume + zero initiative coverage = flag.</div>
+    <div class="flag-card "><span class="flag-name">SP Concentration Risk:</span> One PM authored 1,049 of 1,101 total SP (95%). If that PM is unavailable, PM feed to engineering drops to near-zero. Remaining PMs need to scale authored SP dramatically.</div>
+    <div class="flag-card "><span class="flag-name">Bug-Heavy Ratio:</span> Two PMs are spending &gt;65% of time on reactive bug triage rather than initiative building. This drag on strategic output is reflected in lower Strategic Alignment scores.</div>
+    <div class="flag-card "><span class="flag-name">Exec Prompt Review Gap:</span> Only 1 of 5 PMs has run the Exec Readiness Prompt (scored 8.9/10). Mandate: all active PRDs must be run through Exec Review before next scoring cycle.</div>
+    <div class="flag-card "><span class="flag-name">AI Adoption Floor:</span> Two PMs are critically below team AI usage (&lt;10 sessions total). AI-assisted development is table stakes — adoption gaps directly limit output capacity.</div>
+    
+    </div>
+
+<!-- EFFICIENCY RATCHET -->
+
+    <div class="ratchet-box">
+        <div class="ratchet-title">Efficiency Ratchet &mdash; Green Zone Floor Rises 5% Per Week</div>
+        <div class="ratchet-row"><div class="ratchet-week current"><div class="rw-label">Mar (Baseline)</div><div class="rw-val">67.6</div></div><div class="ratchet-arrow">&rarr;</div><div class="ratchet-week"><div class="rw-label">Apr Wk 1</div><div class="rw-val">71.0</div></div><div class="ratchet-arrow">&rarr;</div><div class="ratchet-week"><div class="rw-label">Apr Wk 2</div><div class="rw-val">74.6</div></div><div class="ratchet-arrow">&rarr;</div><div class="ratchet-week"><div class="rw-label">Apr Wk 3</div><div class="rw-val">78.3</div></div><div class="ratchet-arrow">&rarr;</div><div class="ratchet-week"><div class="rw-label">Apr Wk 4</div><div class="rw-val">82.2</div></div><div class="ratchet-arrow">&rarr;</div><div class="ratchet-week"><div class="rw-label">May Wk 1</div><div class="rw-val">86.3</div></div></div>
+        <div style="font-size:9px;color:#555d70;margin-top:8px;">What&rsquo;s green today is cautionary in a month. Top performer benchmark: <strong style="color:#c8cdd8;">Jay Patil (83.4)</strong> &middot; 1&sigma; = 17.7 pts &middot; Current green floor: &ge;65.7</div>
+    </div>
+
+<div style="font-size:9px;color:#444d60;border-top:1px solid #1c2233;padding-top:10px;margin-top:6px;line-height:1.7;">
+    <strong style="color:#555d70;">Data sources:</strong> Jira &middot; Confluence &middot; Google Drive &middot; Gmail &middot; Anthropic Admin API (pending) &middot; GitHub (pending) &middot; Generated 2026-04-02 12:51
+</div>
+</div><!-- /tab-dashboard -->
+
+<!-- TAB 2: PM PLAYBOOK -->
+<div id="tab-pipeline" class="tab-content">
+<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;">PM Operating Playbook</div>
+<div style="font-size:12px;color:#7a8299;margin-bottom:20px;">Playbook not loaded. Run with --playbook pm-playbook-content.html to include.</div>
+
+</div><!-- /tab-pipeline -->
+
+<!-- TAB 3: GM BACKLOG -->
+<div id="tab-objectives" class="tab-content">
+<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;">GM Backlog &mdash; Kevin&rsquo;s Prioritization Queue</div>
+<div style="font-size:12px;color:#7a8299;margin-bottom:20px;">GM Backlog not loaded. Run with --gmbacklog pm-gmbacklog-content.html to include.</div>
+
+</div><!-- /tab-objectives -->
+
+<!-- TAB 4: RESULTS -->
+
+<div id="tab-results" class="tab-content">
+
+<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;">Results &mdash; PM Outcome Tracker</div>
+<div style="font-size:12px;color:#7a8299;margin-bottom:6px;">How is PM work translating into business outcomes? Chip KPI movement, Jira execution status, and engineering throughput.</div>
+<div style="font-size:10px;color:#b388ff;font-weight:600;margin-bottom:16px;">Outcome data uses <strong style="color:#fff;">baked data only</strong> &mdash; trailing 30-day window, updated weekly, 2-week attribution delay. NPS scored on <strong style="color:#ffc107;">directional MoM improvement</strong>.</div>
+
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;">
+    
+        <div style="background:#141925;border:1px solid #1a8a3f;border-radius:10px;padding:16px;">
+            <div style="font-size:14px;font-weight:700;color:#fff;">Jay Patil</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:10px;">Chip 2 + 6 &middot; Imaging + Retention/P100</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">KEY OUTCOMES</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.7;margin-bottom:10px;">&bull; Design Lab CVR: 9% &rarr; <strong style="color:#ffc107;">12%+</strong><br>&bull; Claims rate (Imaging): 3.0% &rarr; <strong style="color:#ffc107;">&lt;1.0%</strong><br>&bull; Blanks claims rate: 2.9% &rarr; <strong style="color:#ffc107;">&lt;2%</strong><br>&bull; Print claims rate: 6.4% &rarr; <strong style="color:#ffc107;">&lt;3.2%</strong><br></div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">JIRA STATUS</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">9 chip issues &middot; 8 SP</div>
+        </div>
+        <div style="background:#141925;border:1px solid #1a8a3f;border-radius:10px;padding:16px;">
+            <div style="font-size:14px;font-weight:700;color:#fff;">Kyle Bimm</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:10px;">Chip 2 &middot; Imaging &amp; Artwork</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">KEY OUTCOMES</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.7;margin-bottom:10px;">&bull; Design Lab CVR: 9% &rarr; <strong style="color:#ffc107;">12%+</strong><br>&bull; Claims rate (Imaging): 3.0% &rarr; <strong style="color:#ffc107;">&lt;1.0%</strong><br></div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">JIRA STATUS</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">4 chip issues &middot; 8 SP</div>
+        </div>
+        <div style="background:#141925;border:1px solid #1a8a3f;border-radius:10px;padding:16px;">
+            <div style="font-size:14px;font-weight:700;color:#fff;">Ryan Widgeon</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:10px;">Chip 1 + 4 &middot; Print + Wallet Share</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">KEY OUTCOMES</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.7;margin-bottom:10px;">&bull; Print revenue (Q4 run-rate): $32.3M &rarr; <strong style="color:#ffc107;">$89.3M</strong><br>&bull; Consumer revenue: $13.8M &rarr; <strong style="color:#ffc107;">$37.7M</strong><br>&bull; Attach rate: 24% &rarr; <strong style="color:#ffc107;">32%</strong><br>&bull; Image experience CVR: 22.7% &rarr; <strong style="color:#ffc107;">28%</strong><br></div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">JIRA STATUS</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">3 chip issues</div>
+        </div>
+        <div style="background:#141925;border:1px solid #c59a14;border-radius:10px;padding:16px;">
+            <div style="font-size:14px;font-weight:700;color:#fff;">Sebastian Vera</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:10px;">Chip 5 &middot; Site Perf &amp; Reliability</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">KEY OUTCOMES</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.7;margin-bottom:10px;">&bull; CPO %: 36% &rarr; <strong style="color:#ffc107;">10%</strong><br>&bull; CSAT: 93% &rarr; <strong style="color:#ffc107;">95%</strong><br></div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">JIRA STATUS</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">2 chip issues &middot; 222 SP</div>
+        </div>
+        <div style="background:#141925;border:1px solid #1565c0;border-radius:10px;padding:16px;">
+            <div style="font-size:14px;font-weight:700;color:#fff;">Sabby Singh</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:10px;">Chip 3 + 6 &middot; Delivery + Retention</div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">KEY OUTCOMES</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.7;margin-bottom:10px;">&bull; Blanks OTD %: 85.4% &rarr; <strong style="color:#ffc107;">&gt;96%</strong><br>&bull; Transfers OTD %: 82.8% &rarr; <strong style="color:#ffc107;">&gt;96%</strong><br>&bull; Blanks claims rate: 2.9% &rarr; <strong style="color:#ffc107;">&lt;2%</strong><br>&bull; Print claims rate: 6.4% &rarr; <strong style="color:#ffc107;">&lt;3.2%</strong><br></div>
+            <div style="font-size:9px;color:#7a8299;margin-bottom:4px;">JIRA STATUS</div>
+            <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">9 chip issues</div>
+        </div>
+</div>
+
+<div style="background:#141925;border:1px solid #2a3040;border-radius:10px;padding:22px 26px;margin-bottom:20px;">
+    <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #2a3040;">Chip KPI Targets &mdash; FY2026 (MBR-Sourced)</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px;">
+            <div style="background:#0d1220;border-radius:8px;padding:12px;border-left:3px solid #e74c3c;">
+                <div style="font-size:11px;font-weight:700;color:#e74c3c;margin-bottom:6px;">Chip 1: Print Scale &amp; Profitability (Ryan Widgeon)</div>
+                <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">Print revenue $32.3M&rarr;$89.3M &middot; Consumer revenue $13.8M&rarr;$37.7M &middot; B2B/POD revenue <$1M&rarr;$22.2M</div>
+            </div>
+            <div style="background:#0d1220;border-radius:8px;padding:12px;border-left:3px solid #3498db;">
+                <div style="font-size:11px;font-weight:700;color:#3498db;margin-bottom:6px;">Chip 2: Imaging &amp; Artwork (Kyle Bimm)</div>
+                <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">Design Lab CVR 9%&rarr;12%+ &middot; Claims rate 3.0%&rarr;<1.0% &middot; Transfers NPS 57.3&rarr;100</div>
+            </div>
+            <div style="background:#0d1220;border-radius:8px;padding:12px;border-left:3px solid #2ecc71;">
+                <div style="font-size:11px;font-weight:700;color:#2ecc71;margin-bottom:6px;">Chip 3: Delivery Speed &amp; OTP (Sabby Singh)</div>
+                <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">Blanks OTD % 85.4%&rarr;>96% &middot; Transfers OTD % 82.8%&rarr;>96% &middot; Print OTP 90% / 92%&rarr;96% / 95%</div>
+            </div>
+            <div style="background:#0d1220;border-radius:8px;padding:12px;border-left:3px solid #9b59b6;">
+                <div style="font-size:11px;font-weight:700;color:#9b59b6;margin-bottom:6px;">Chip 4: Wallet Share / BOGO (Ryan Widgeon)</div>
+                <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">Attach rate 24%&rarr;32% &middot; Image experience CVR 22.7%&rarr;28% &middot; Repeat purchase rate 47%&rarr;52%</div>
+            </div>
+            <div style="background:#0d1220;border-radius:8px;padding:12px;border-left:3px solid #f39c12;">
+                <div style="font-size:11px;font-weight:700;color:#f39c12;margin-bottom:6px;">Chip 5: Site Perf &amp; Ops Excellence (Sebastian Vera)</div>
+                <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">CPO % 36%&rarr;10% &middot; CSAT 93%&rarr;95% &middot; Chat P90 response 210s&rarr;90s</div>
+            </div>
+            <div style="background:#0d1220;border-radius:8px;padding:12px;border-left:3px solid #1abc9c;">
+                <div style="font-size:11px;font-weight:700;color:#1abc9c;margin-bottom:6px;">Chip 6: Retention &amp; Claims (Sabby Singh)</div>
+                <div style="font-size:10px;color:#c8cdd8;line-height:1.6;">Blanks claims rate 2.9%&rarr;<2% &middot; Print claims rate 6.4%&rarr;<3.2% &middot; Repeat purchase 47%&rarr;52%</div>
+            </div>
+    </div>
+    <div style="font-size:9px;color:#555d70;">NPS universal target: 100 (P100) &mdash; scored on directional MoM improvement. All targets MBR-sourced (Kevin Chelak).</div>
+</div>
+
+<div style="background:#141925;border:1px solid #2a3040;border-radius:10px;padding:22px 26px;margin-bottom:20px;">
+    <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #2a3040;">Engineering Feed Health</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:12px;">
+        <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;">Eng Target</div><div style="font-size:22px;font-weight:800;color:#fff;">4,400 SP</div></div>
+        <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;">Eng Delivered</div><div style="font-size:22px;font-weight:800;color:#2ecc71;">3,429 SP</div></div>
+        <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;">PM Authored</div><div style="font-size:22px;font-weight:800;color:#e74c3c;">1,101 SP</div></div>
+        <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;">Feed Buffer</div><div style="font-size:22px;font-weight:800;color:#e74c3c;">0.66x</div></div>
+        <div style="text-align:center;"><div style="font-size:9px;color:#7a8299;text-transform:uppercase;">Apr Capacity</div><div style="font-size:22px;font-weight:800;color:#ffc107;">5,720 SP</div></div>
+    </div>
+</div>
+
+<div style="background:#141925;border:1px solid #2a3040;border-radius:10px;padding:22px 26px;margin-bottom:20px;">
+    <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #2a3040;">Jira Snapshot &mdash; 100 Issues / 8 Projects</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px;">
+            <div style="background:#0d1220;border-radius:6px;padding:10px;text-align:center;border-top:2px solid #e74c3c;">
+                <div style="font-size:8px;color:#e74c3c;font-weight:700;">Chip 1</div>
+                <div style="font-size:16px;font-weight:800;color:#fff;">2</div>
+                <div style="font-size:8px;color:#555d70;">issues</div>
+            </div>
+            <div style="background:#0d1220;border-radius:6px;padding:10px;text-align:center;border-top:2px solid #3498db;">
+                <div style="font-size:8px;color:#3498db;font-weight:700;">Chip 2</div>
+                <div style="font-size:16px;font-weight:800;color:#fff;">4</div>
+                <div style="font-size:8px;color:#555d70;">8 SP</div>
+            </div>
+            <div style="background:#0d1220;border-radius:6px;padding:10px;text-align:center;border-top:2px solid #2ecc71;">
+                <div style="font-size:8px;color:#2ecc71;font-weight:700;">Chip 3</div>
+                <div style="font-size:16px;font-weight:800;color:#fff;">4</div>
+                <div style="font-size:8px;color:#555d70;">issues</div>
+            </div>
+            <div style="background:#0d1220;border-radius:6px;padding:10px;text-align:center;border-top:2px solid #9b59b6;">
+                <div style="font-size:8px;color:#9b59b6;font-weight:700;">Chip 4</div>
+                <div style="font-size:16px;font-weight:800;color:#fff;">1</div>
+                <div style="font-size:8px;color:#555d70;">issues</div>
+            </div>
+            <div style="background:#0d1220;border-radius:6px;padding:10px;text-align:center;border-top:2px solid #f39c12;">
+                <div style="font-size:8px;color:#f39c12;font-weight:700;">Chip 5</div>
+                <div style="font-size:16px;font-weight:800;color:#fff;">2</div>
+                <div style="font-size:8px;color:#555d70;">222 SP</div>
+            </div>
+            <div style="background:#0d1220;border-radius:6px;padding:10px;text-align:center;border-top:2px solid #1abc9c;">
+                <div style="font-size:8px;color:#1abc9c;font-weight:700;">Chip 6</div>
+                <div style="font-size:16px;font-weight:800;color:#fff;">5</div>
+                <div style="font-size:8px;color:#555d70;">issues</div>
+            </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+            <div style="background:#0d1220;border-radius:6px;padding:10px;">
+                <div style="font-size:10px;font-weight:700;color:#2ecc71;margin-bottom:4px;">Blanks</div>
+                <div style="font-size:10px;color:#7a8299;">~$4.4M/wk &middot; 31% GM &middot; 87-89% returning customers</div>
+            </div>
+            <div style="background:#0d1220;border-radius:6px;padding:10px;">
+                <div style="font-size:10px;font-weight:700;color:#f39c12;margin-bottom:4px;">DTF Transfers</div>
+                <div style="font-size:10px;color:#7a8299;">~$2.1M/wk &middot; 68% GM &middot; BOGO running ~$1M/month</div>
+            </div>
+            <div style="background:#0d1220;border-radius:6px;padding:10px;">
+                <div style="font-size:10px;font-weight:700;color:#e74c3c;margin-bottom:4px;">Print</div>
+                <div style="font-size:10px;color:#7a8299;">~$411K/wk &middot; 48% GM &middot; 12-19% claim rate (worst)</div>
+            </div>
+    </div>
+</div>
+
+<div style="background:#1a1040;border-radius:6px;padding:10px 12px;border-left:3px solid #b388ff;font-size:10px;color:#7a8299;line-height:1.6;">
+    <strong style="color:#b388ff;">Sources:</strong> Jira Cloud (100 issues, 2026-04-02) &middot; MBR Review Sheet (Kevin Chelak) &middot; Eng End-of-Week Reports &middot; CPO feedback (2026-04-02)
+</div>
+
+</div><!-- /tab-results -->
+
+<!-- FOOTER -->
+<div class="footer">
+    PM Performance Leaderboard &mdash; Zone-Based, Strategic-Alignment-First &middot; CPO/COO Feedback Integrated<br>
+    Generated 2026-04-02 12:51 by pm-leaderboard-generator.py<br>
+    Sources: Jira Cloud &middot; Confluence &middot; Google Drive &middot; Gmail (Kevin Chelak CPO emails) &middot; Config: pm-leaderboard-config.json
+</div>
+
+
+<script>
+function switchTab(tab) {
+    document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.classList.add('active');
+}
+function toggleAllDetails() {
+    var bodies = document.querySelectorAll('.expand-body');
+    var isOpen = bodies[0] && bodies[0].classList.contains('open');
+    bodies.forEach(function(b) { isOpen ? b.classList.remove('open') : b.classList.add('open'); });
+    document.querySelectorAll('.expand-toggle .chevron').forEach(function(c) { c.style.transform = isOpen ? '' : 'rotate(180deg)'; });
+}
+</script>
+</body>
+</html>
