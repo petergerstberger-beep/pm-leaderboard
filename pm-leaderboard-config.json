@@ -1,24 +1,25 @@
 {
   "meta": {
     "version": "2.0",
-    "last_refresh": "2026-04-06T13:00:00Z",
-    "next_refresh": "2026-04-13T13:00:00Z",
+    "last_refresh": "2026-04-09T13:00:00Z",
+    "next_refresh": "2026-04-16T13:00:00Z",
     "refresh_cadence": "weekly",
     "data_sources": {
       "jira": {
-        "status": "success",
+        "status": "estimated_from_prior",
         "records_pulled": 398,
-        "cloudId": "8e5e4495-e477-4a3f-af21-f2ff97eae820"
+        "cloudId": "8e5e4495-e477-4a3f-af21-f2ff97eae820",
+        "note": "No Jira MCP connector this session. Using data from Apr 6 pull (3 days old)."
       },
       "gmail": {
         "status": "success",
-        "threads_read": 12,
-        "note": "Kevin CPO feedback + Jay AI Initiatives thread"
+        "threads_read": 18,
+        "note": "Kevin CPO feedback Mar 31 - Apr 8, redraw stuck escalation, MBR prep directives"
       },
       "google_drive": {
         "status": "success",
-        "docs_found": 8,
-        "note": "Exec Priorities, PM allocation meeting notes, PRD Exec Readiness Prompt"
+        "docs_found": 10,
+        "note": "PM allocation meeting notes, PRD Exec Readiness Prompt, Weekly PRD Meeting notes"
       },
       "confluence": {
         "status": "unavailable",
@@ -29,7 +30,7 @@
         "note": "No Slack MCP connector. Optional enrichment skipped."
       }
     },
-    "scoring_date": "2026-04-06",
+    "scoring_date": "2026-04-09",
     "scoring_window_days": 90,
     "velocity_window_days": 30
   },
@@ -91,6 +92,11 @@
         "week": 6,
         "date": "2026-04-13",
         "green_floor": 90.6
+      },
+      {
+        "week": 7,
+        "date": "2026-04-20",
+        "green_floor": 95.1
       }
     ]
   },
@@ -107,122 +113,11 @@
     "green_threshold": 86.3,
     "cautionary_threshold": 59.6
   },
-  "chips": {
-    "chip_1": {
-      "name": "Solving Print for Scale and Profitability",
-      "owner": "Ryan Widgeon",
-      "p100": false,
-      "kpis": [
-        "Print CVR (9%â12%+)",
-        "Print revenue ($32.3Mâ$89.3M)",
-        "Print gross margin",
-        "NPS (67â100)"
-      ],
-      "jira_labels": [
-        "chip-1"
-      ]
-    },
-    "chip_2": {
-      "name": "Customer Imaging and Artwork Experience",
-      "owners": [
-        "Kyle Bimm",
-        "Jay Patil"
-      ],
-      "p100": true,
-      "kpis": [
-        "Image experience CVR",
-        "Redraw automation rate",
-        "Human redraw volume",
-        "AI audit replacement %",
-        "Claims rate imaging (3.0%â<1.0%)",
-        "NPS"
-      ],
-      "jira_labels": [
-        "chip-2"
-      ]
-    },
-    "chip_3": {
-      "name": "Delivery Speed and On-Time Reliability",
-      "owner": "Sabby Singh",
-      "p100": true,
-      "kpis": [
-        "OTD % (85.4%â>96%)",
-        "Delivery speed local (51â36 hrs)",
-        "Delivery speed non-local (97â72 hrs)",
-        "Printer network coverage (16â40+ DMAs)",
-        "NPS"
-      ],
-      "jira_labels": [
-        "chip-3"
-      ],
-      "note": "Sebastian Vera currently executing majority of Chip 3 Jira work"
-    },
-    "chip_4": {
-      "name": "Wallet Share (BOGO + Blanks & Transfers)",
-      "owner": "Ryan Widgeon",
-      "p100": false,
-      "kpis": [
-        "Attach rate (23.7%â32%)",
-        "AOV",
-        "Cross-sell CVR (BlanksâTransfers)",
-        "LTV by cohort",
-        "NPS"
-      ],
-      "jira_labels": [
-        "chip-4"
-      ]
-    },
-    "chip_5": {
-      "name": "Site Performance, Reliability, Operational Excellence",
-      "owner": "Sebastian Vera",
-      "p100": false,
-      "kpis": [
-        "CST automation rate (0%â30%)",
-        "CSAT (93%â95%)",
-        "Chat P90 (210sâ90s)",
-        "Email P90 (12hâ8h)",
-        "CPO % (36%â10%)",
-        "NPS"
-      ],
-      "jira_labels": [
-        "chip-5"
-      ]
-    },
-    "chip_6": {
-      "name": "Retention and Claims Reduction",
-      "owners": [
-        "Sabby Singh",
-        "Jay Patil"
-      ],
-      "p100": true,
-      "kpis": [
-        "Claims rate blanks (2.85%â<2.0%)",
-        "Claims rate print (6.4%â<3.2%)",
-        "Claims rate imaging (3.0%â<1.0%)",
-        "Retention rate (46.5%â52%)",
-        "NPS"
-      ],
-      "jira_labels": [
-        "chip-6"
-      ]
-    }
-  },
-  "business_lines": [
-    "Blanks",
-    "Transfers",
-    "Print",
-    "B2B"
-  ],
-  "pms": {
-    "jay_patil": {
+  "pms": [
+    {
       "name": "Jay Patil",
-      "title": "AI Product Manager",
-      "email": "jay.patil@jiffyshirts.com",
-      "chips": [
-        2,
-        6
-      ],
-      "onboarding": false,
+      "composite": 60.9,
+      "zone": "cautionary",
       "pillar_scores": {
         "strategic_alignment": 62,
         "prd_quality": 55,
@@ -230,8 +125,6 @@
         "ai_leverage": 85,
         "velocity": 48
       },
-      "composite": 60.9,
-      "zone": "cautionary",
       "gate_breaches": [],
       "jira_summary": {
         "total_90d": 56,
@@ -245,33 +138,30 @@
         "bugs_filed": 3
       },
       "key_initiatives": [
-        "PIP-1721: AI Audit (General) â In Progress, delivery Apr 15",
-        "PIP-2285: AI-Powered Intelligent Replacement Routing â In Progress, delivery Apr 20",
-        "PIP-1722: AI Claims Classification â Done (released Apr 7 target)",
-        "JED-2141: CMYK Color Diagnostics V2 â Done",
-        "JED-1946: AI Audit BG Removal VLM Evaluation â Done"
+        "PIP-1721: AI Audit (General) - In Progress, delivery Apr 15",
+        "PIP-2285: AI-Powered Intelligent Replacement Routing - In Progress, delivery Apr 20",
+        "PIP-1722: AI Claims Classification - Done (released Apr 7 target)",
+        "JED-2141: CMYK Color Diagnostics V2 - Done",
+        "JED-1946: AI Audit BG Removal VLM Evaluation - Done"
       ],
-      "earning": "Jay's AI Audit (PIP-1721) and AI Routing (PIP-2285) are both P100-critical and in active development with April delivery targets. AI Claims Classification (PIP-1722) shipped. Composite held back by prd_quality (55) due to scope churn on AI Audit PRD (rewritten twice as scope expanded from BG-only to general audit) and pipeline_health (55) from high paused ratio (13 of 56 tickets). Velocity (48) reflects strategic concentration â only 6 resolved in 30 days but each is high-impact. Kevin flagged 6-7 week MBR-to-delivery timeline as too slow and questioned Datadog dashboard decision.",
-      "path_to_100": "Ship AI Audit by Apr 15 and AI Routing by Apr 20 (both on track per Jay's Apr 3 update). Build Hex dashboard for audit results by Apr 15. Reduce paused backlog â 13 paused items represent 23% of total pipeline. Next PRD should run through Exec Readiness Prompt for quality gate. Move JED-1948 CMYK ProColor (currently paused) to active.",
-      "details": {
-        "sa_rationale": "Both active P100 items (AI Audit, AI Routing) map to Chip 2 and Chip 6. Kevin confirmed direction is aligned. Deducted for timeline concern (6-7 weeks from MBR to delivery) and scope churn.",
-        "prd_rationale": "AI Audit PRD rewritten twice due to scope expansion (BG-only â general audit â 100% redraw). No Exec Prompt score visible (-15 penalty risk). Solid research foundation (JED-1946 VLM eval completed) but documentation trail has gaps.",
-        "ai_rationale": "Highest AI leverage of any PM â AI Audit, AI Routing, AI Claims are all AI-native products. Jay is the AI PM by title and output."
-      },
+      "earning": "Jay's AI Audit (PIP-1721) and AI Routing (PIP-2285) remain P100-critical with April delivery targets. AI Claims Classification (PIP-1722) shipped. On Apr 8, Kevin escalated a redraw stuck spike (+203.7% WoW, 82 net new) directly to Jay - this signals active P100 operational risk in Chip 2 imaging. Composite held back by prd_quality (55) due to scope churn on AI Audit PRD and pipeline_health (55) from 13 paused items (23% of pipeline). Velocity (48) reflects strategic concentration - 6 resolved in 30 days.",
+      "path_to_100": "Resolve redraw stuck spike flagged by Kevin on Apr 8 - determine if this is a new bug or backlog issue. Ship AI Audit by Apr 15 and AI Routing by Apr 20. Build Hex dashboard for audit results. Reduce paused backlog (13 items, 23% of pipeline). Run next PRD through Exec Readiness Prompt. Move JED-1948 CMYK ProColor from paused to active.",
       "flags": [
         "timeline_concern",
         "scope_churn",
-        "missing_exec_prompt"
-      ]
-    },
-    "kyle_bimm": {
-      "name": "Kyle Bimm",
-      "title": "Product Manager",
-      "email": "kyle.bimm@jiffyshirts.com",
-      "chips": [
-        2
+        "missing_exec_prompt",
+        "redraw_stuck_escalation"
       ],
-      "onboarding": false,
+      "details": {
+        "sa_rationale": "Both active P100 items (AI Audit, AI Routing) map to Chip 2 and Chip 6. Kevin confirmed direction is aligned. Deducted for timeline concern (6-7 weeks from MBR to delivery) and scope churn.",
+        "prd_rationale": "AI Audit PRD rewritten twice due to scope expansion (BG-only to general audit to 100% redraw). No Exec Prompt score visible (-15 penalty risk). Solid research foundation (JED-1946 VLM eval completed) but documentation trail has gaps.",
+        "ai_rationale": "Highest AI leverage of any PM - AI Audit, AI Routing, AI Claims are all AI-native products. Jay is the AI PM by title and output."
+      }
+    },
+    {
+      "name": "Kyle Bimm",
+      "composite": 71.7,
+      "zone": "cautionary",
       "pillar_scores": {
         "strategic_alignment": 78,
         "prd_quality": 58,
@@ -279,8 +169,6 @@
         "ai_leverage": 72,
         "velocity": 78
       },
-      "composite": 71.7,
-      "zone": "cautionary",
       "gate_breaches": [],
       "jira_summary": {
         "total_90d": 106,
@@ -294,33 +182,29 @@
         "bugs_filed": 12
       },
       "key_initiatives": [
-        "PIP-2362: Imaging Pipeline Color Anchoring PRD â new, reacting to Chris's 84-page doc",
-        "P100-72 through P100-78: Image pipeline color anchoring series (7 items) â To Do",
-        "JED-1926: Redraw V2 Single Shot AI Edits â In Progress",
-        "JED-2119: AI Redraw Phase 3 Edit Skills â In Progress",
-        "PIP-2154-2161: Image tag/claim rate research series â Done (6 items completed)"
+        "PIP-2362: Imaging Pipeline Color Anchoring PRD - new, reacting to Chris's 84-page doc",
+        "P100-72 through P100-78: Image pipeline color anchoring series (7 items) - To Do",
+        "JED-1926: Redraw V2 Single Shot AI Edits - In Progress",
+        "JED-2119: AI Redraw Phase 3 Edit Skills - In Progress",
+        "PIP-2154-2161: Image tag/claim rate research series - Done (6 items completed)"
       ],
-      "earning": "Kyle is the #2 scorer at 71.7 and the strongest Chip 2 contributor. 106 tickets in 90 days with 27 Done shows high throughput. 9 P100 color anchoring items (P100-72 through P100-78, P100-56, P100-60) queued for execution after PRD work. Completed the full image tag-to-claim-rate research series (PIP-2154-2161, 6 items) which provides the data foundation for audit bypass thresholds. Kevin expressed confidence Kyle is actively creating PRDs in reaction to Chris's 84-page color consistency document. Bug resolution strong: JED-2031 and JED-2030 (both P0 Critical AI Redraw issues) shipped.",
-      "path_to_100": "Complete Color Anchoring PRD (PIP-2362) and get through Exec Readiness review. Move P100-72 through P100-78 from To Do to In Progress â these are the highest-leverage P100 items for Chip 2. Ship Redraw V2 (JED-1926) and Phase 3 Edit Skills (JED-2119). Run next PRD through Exec Prompt for quality gate uplift. Respond to executive emails on color consistency work (Kevin flagged lack of response).",
+      "earning": "Kyle is the #2 scorer at 71.7 and the strongest Chip 2 contributor. 106 tickets in 90 days with 27 Done. 9 P100 color anchoring items queued after PRD work. Completed full image tag-to-claim-rate research series (PIP-2154-2161, 6 items). Kevin expressed confidence Kyle is actively creating PRDs reacting to Chris's 84-page color consistency document. Apr 8: Kevin requesting redraw cost vs AI cost per image breakdown (Vectorizer.AI) - directly relevant to Kyle's imaging pipeline work.",
+      "path_to_100": "Complete Color Anchoring PRD (PIP-2362) and run through Exec Readiness review. Move P100-72 through P100-78 from To Do to In Progress. Ship Redraw V2 (JED-1926) and Phase 3 Edit Skills (JED-2119). Prepare redraw vs AI cost-per-image analysis for Kevin (Vectorizer.AI context). Run next PRD through Exec Prompt for quality gate uplift. Respond to executive emails on color consistency.",
+      "flags": [
+        "missing_exec_prompt",
+        "exec_email_response_gap",
+        "vectorizer_cost_analysis_needed"
+      ],
       "details": {
         "sa_rationale": "9 P100 items, heavy Chip 2 focus on imaging/artwork. All active work maps directly to assigned chip. Kevin expressed confidence in Kyle's direction. Strong research-to-PRD pipeline.",
         "prd_rationale": "New Color Anchoring PRD (PIP-2362) created Apr 6. No Exec Prompt or GStack data visible, which caps score. Research foundation is exceptionally strong (6 completed research tasks feeding PRD decisions).",
         "ai_rationale": "AI Redraw V2, VLM Validator, AI Edit Skills all leverage AI directly. Kyle owns the AI image pipeline execution layer."
-      },
-      "flags": [
-        "missing_exec_prompt",
-        "exec_email_response_gap"
-      ]
+      }
     },
-    "ryan_widgeon": {
+    {
       "name": "Ryan Widgeon",
-      "title": "Product Manager",
-      "email": "ryan.widgeon@jiffyshirts.com",
-      "chips": [
-        1,
-        4
-      ],
-      "onboarding": false,
+      "composite": 57.0,
+      "zone": "cautionary",
       "pillar_scores": {
         "strategic_alignment": 52,
         "prd_quality": 60,
@@ -328,8 +212,6 @@
         "ai_leverage": 42,
         "velocity": 65
       },
-      "composite": 57.0,
-      "zone": "cautionary",
       "gate_breaches": [],
       "jira_summary": {
         "total_90d": 90,
@@ -346,33 +228,29 @@
         "bugs_filed": 8
       },
       "key_initiatives": [
-        "PRINT-6419: Stripe OCS Dynamic Payment Methods â In Progress (P0)",
-        "PRINT-6420: Stripe Link One-Click Checkout â In Progress (P0)",
-        "PRINT-6429-6432: B2B Form Placements series â Ready for Dev",
-        "PIP-2107-2114: Gang sheet bug investigation series â Done (7 items)",
+        "PRINT-6419: Stripe OCS Dynamic Payment Methods - In Progress (P0)",
+        "PRINT-6420: Stripe Link One-Click Checkout - In Progress (P0)",
+        "PRINT-6429-6432: B2B Form Placements series - Ready for Dev",
+        "PIP-2107-2114: Gang sheet bug investigation series - Done (7 items)",
         "7 PRDs ready for review (non-P100, per Kevin)"
       ],
-      "earning": "Ryan has 90 tickets in 90 days and 17 Done. Stripe OCS (PRINT-6419, 6420) is his highest-impact active work â both are P0 Critical and in active development. Completed full gang sheet investigation series (PIP-2107-2114). Kevin designated Ryan as 'utility player' for P100 support, meaning his Chip 1/4 PRDs (7 ready for review) are deprioritized in favor of helping others close P100 items. Strategic alignment score (52) is lowest among active PMs because his chips (1, 4) are non-P100 and Kevin explicitly paused his roadmap PRDs.",
-      "path_to_100": "Support P100 items as utility player per Kevin's directive â specifically help Kyle and Sabby with Chip 2/3 overflow items. Ship Stripe OCS (PRINT-6419, 6420) as these drive Chip 1 CVR. Integrate fraud work ($35K/mo fines) now added to P100 scope â device ID investigation with Abhishek. Once P100 pressure eases, activate 7 backlogged PRDs. Increase AI leverage beyond Stripe's AI-optimized payment ordering.",
-      "details": {
-        "sa_rationale": "Chips 1+4 are non-P100. Kevin explicitly said Ryan's PRDs are 'non-P100' and reassigned him as utility player. Active work (Stripe OCS) maps to Chip 1 but isn't labeled P100. Good execution, wrong priority lane.",
-        "prd_rationale": "7 PRDs ready for review is strong output volume. B2B Form Placements series is well-structured. No Exec Prompt data visible. Gang sheet investigation series shows strong analytical PRD work.",
-        "ai_rationale": "PRINT-6419 has AI-optimized payment ordering component. Otherwise limited AI-native work. Score just above gate (42)."
-      },
+      "earning": "Ryan has 90 tickets in 90 days and 17 Done. Stripe OCS (PRINT-6419, 6420) both P0 Critical and in active dev. Completed full gang sheet investigation (PIP-2107-2114). Kevin designated Ryan as utility player for P100 - Chip 1/4 PRDs deprioritized. Strategic alignment (52) is lowest among active PMs because his chips (1, 4) are non-P100. Fraud work ($35K/mo VA fines) now in P100 scope - device ID investigation with Abhishek assigned to Ryan.",
+      "path_to_100": "Support P100 items as utility player per Kevin's directive - help Kyle and Sabby with Chip 2/3 overflow. Ship Stripe OCS (PRINT-6419, 6420). Drive fraud/device ID investigation with Abhishek (79% of orders missing device ID). Once P100 pressure eases, activate 7 backlogged PRDs. Increase AI leverage beyond current 42 score.",
       "flags": [
         "non_p100_focus",
         "utility_player_role",
         "missing_exec_prompt"
-      ]
-    },
-    "sebastian_vera": {
-      "name": "Sebastian Vera",
-      "title": "Product Manager",
-      "email": "sebastian.vera@jiffyshirts.com",
-      "chips": [
-        5
       ],
-      "onboarding": false,
+      "details": {
+        "sa_rationale": "Chips 1+4 are non-P100. Kevin explicitly said Ryan's PRDs are non-P100 and reassigned him as utility player. Active work (Stripe OCS) maps to Chip 1 but isn't labeled P100. Good execution, wrong priority lane.",
+        "prd_rationale": "7 PRDs ready for review is strong output volume. B2B Form Placements series is well-structured. No Exec Prompt data visible. Gang sheet investigation series shows strong analytical PRD work.",
+        "ai_rationale": "PRINT-6419 has AI-optimized payment ordering component. Otherwise limited AI-native work. Score just above gate (42)."
+      }
+    },
+    {
+      "name": "Sebastian Vera",
+      "composite": 73.6,
+      "zone": "cautionary",
       "pillar_scores": {
         "strategic_alignment": 82,
         "prd_quality": 62,
@@ -380,8 +258,6 @@
         "ai_leverage": 45,
         "velocity": 92
       },
-      "composite": 73.6,
-      "zone": "cautionary",
       "gate_breaches": [],
       "jira_summary": {
         "total_90d": 146,
@@ -398,35 +274,31 @@
         "bugs_filed": 30
       },
       "key_initiatives": [
-        "PO-2681: Automated Delay Notifications (All LOBs) â Done, shipped",
-        "PO-2895: Scalable Order Notification System â Done, shipped",
-        "PO-2536: ProColor Facility Routing Preference â Done, shipped",
+        "PO-2681: Automated Delay Notifications (All LOBs) - Done, shipped",
+        "PO-2895: Scalable Order Notification System - Done, shipped",
+        "PO-2536: ProColor Facility Routing Preference - Done, shipped",
         "30+ delivery/OTP bugs resolved in 90 days including 5 P0 Critical",
-        "PO-2859: Barcode/QR Scanning License Plate Model â Backlog",
-        "PO-2982: Date consistency tracking expansion â Ready for Dev"
+        "PO-2859: Barcode/QR Scanning License Plate Model - Backlog",
+        "PO-2982: Date consistency tracking expansion - Ready for Dev"
       ],
-      "earning": "Seb is the top scorer at 73.6 and the highest-velocity PM by a wide margin. 146 tickets in 90 days with 36+ Done (first 50 alone). 28 resolved in the last 30 days â nearly 1 per day. Shipped two major PRD-level initiatives: Automated Delay Notifications (PO-2681) and Scalable Order Notification System (PO-2895), both critical for Chip 3/5 delivery experience. Resolved 5 P0 Critical bugs including delivery date accuracy issues (PO-2619, PO-2701) and free shipping threshold (PO-2889). Note: Kevin's chip assignment puts Seb on Chip 5 (Site/Ops) but majority of his Jira work maps to Chip 3 delivery/OTP â he is executing Chip 3 work that is nominally Sabby's.",
-      "path_to_100": "Activate CST automation work (Chip 5 primary KPI: 0%â40% by Week 4). Push PO-2982 (date consistency) and PO-2859 (barcode scanning) to In Progress. Run next PRD through Exec Readiness Prompt. Increase AI leverage â explore AI-assisted routing optimization or automated delivery prediction. Bridge the gap between Chip 5 assignment and Chip 3 execution by formalizing cross-chip contribution with Kevin.",
+      "earning": "Seb is the top scorer at 73.6 and highest-velocity PM. 146 tickets in 90 days, 36+ Done, 28 resolved in 30 days (nearly 1/day). Shipped Automated Delay Notifications (PO-2681) and Scalable Order Notification System (PO-2895). Resolved 5 P0 Critical bugs. Kevin assigned Chip 5 but Seb is executing majority of Chip 3 delivery/OTP work. Apr 8: Kevin requesting observability platform approval (ScoutAPM) - relevant to Seb's Chip 5 site reliability work. CST automation target updated to 40% by Week 4, 60% by Week 8 per Kevin (Apr 2).",
+      "path_to_100": "Activate CST automation (Chip 5 primary KPI: 0% to 40% by Week 4, 60% by Week 8 per Kevin's Apr 2 directive). Push PO-2982 (date consistency) and PO-2859 (barcode scanning) to In Progress. Evaluate ScoutAPM or similar observability platform for Chip 5 reliability. Run next PRD through Exec Readiness Prompt. Increase AI leverage - explore AI-assisted routing or delivery prediction.",
+      "flags": [
+        "chip_assignment_mismatch",
+        "missing_exec_prompt",
+        "ai_leverage_near_gate",
+        "cst_automation_target_set"
+      ],
       "details": {
         "sa_rationale": "Kevin assigned Chip 5 but Seb is executing massive Chip 3 delivery work. Credit given for actual output alignment to business-critical P100 objectives (delivery speed, OTP). Cross-chip contribution is a positive signal.",
         "prd_rationale": "Two shipped PRD-level initiatives (Delay Notifications, Notification System). Heavy bug-fix focus means fewer net-new PRDs in pipeline. No Exec Prompt data visible.",
         "ai_rationale": "Limited AI-native work. Ops automation initiatives (notification system) have automation but not AI-specific leverage. Score (45) is just above gate."
-      },
-      "flags": [
-        "chip_assignment_mismatch",
-        "missing_exec_prompt",
-        "ai_leverage_near_gate"
-      ]
+      }
     },
-    "sabby_singh": {
+    {
       "name": "Sabby Singh",
-      "title": "Product Manager",
-      "email": "sarabjeet.singh@jiffy.com",
-      "chips": [
-        3,
-        6
-      ],
-      "onboarding": true,
+      "composite": 0,
+      "zone": "onboarding",
       "pillar_scores": {
         "strategic_alignment": 0,
         "prd_quality": 0,
@@ -434,15 +306,7 @@
         "ai_leverage": 0,
         "velocity": 0
       },
-      "composite": 0,
-      "zone": "onboarding",
-      "gate_breaches": [
-        "strategic_alignment",
-        "prd_quality",
-        "pipeline_health",
-        "ai_leverage",
-        "velocity"
-      ],
+      "gate_breaches": [],
       "jira_summary": {
         "total_90d": 0,
         "done_90d": 0,
@@ -451,55 +315,57 @@
         "p0_active": 0,
         "p100_items": 0,
         "bugs_filed": 0,
-        "note": "Zero Jira tickets found under 'Sarabjeet Singh', 'Sabby Singh', or email. Account name mismatch or onboarding."
+        "note": "Zero Jira tickets found under Sarabjeet Singh, Sabby Singh, or email. Account name mismatch or onboarding."
       },
       "key_initiatives": [],
-      "earning": "No Jira data found for Sabby under any name variation (Sarabjeet Singh, Sabby Singh, sarabjeet.singh@jiffy.com). Kevin's Mar 30 meeting notes reference 'Savvy' as having many P100 blocked items and being assigned Chip 3 + half of Chip 6. Sebastian Vera appears to be executing the majority of Chip 3 delivery work. Classified as Onboarding pending Jira account resolution.",
-      "path_to_100": "Resolve Jira account access â confirm display name and email used in Atlassian. Get assigned to Chip 3 P100 tickets that are currently blocked (Kevin noted 17 items blocked needing PM). Begin working with Joe on operational strategies for Chip 3 workstreams (Printer Portal, carrier network, workflow automation). File first PRDs for Chip 3 delivery speed initiatives.",
-      "details": {
-        "sa_rationale": "Cannot score â no Jira data. Kevin confirmed Sabby is assigned Chip 3 + half of Chip 6, but no visible ticket activity.",
-        "note": "Kevin mentioned Sabby's blocked items are 'primarily savvies items' waiting on Joe for operational strategies. This suggests Sabby may be working but tickets are filed under a different name or system."
-      },
+      "earning": "No Jira data found for Sabby under any name variation. Kevin's Mar 30 meeting notes reference Sabby as having many P100 blocked items assigned to Chip 3 + half of Chip 6. Sebastian Vera executing majority of Chip 3 work. Apr 7: Kevin forwarded NPS negative rating for follow-up to Cyrena/Ainsley/Joseph - relevant to Sabby's Chip 6 retention scope. Classified as Onboarding pending Jira account resolution.",
+      "path_to_100": "Resolve Jira account access - confirm display name and email in Atlassian. Get assigned to Chip 3 P100 blocked tickets (17 items per Kevin). Begin working with Joe on operational strategies for Chip 3 (Printer Portal, carrier network, workflow automation). File first PRDs for delivery speed initiatives.",
       "flags": [
         "onboarding",
         "jira_account_gap",
         "no_visible_output"
-      ]
+      ],
+      "details": {
+        "sa_rationale": "Cannot score - no Jira data. Kevin confirmed Sabby is assigned Chip 3 + half of Chip 6, but no visible ticket activity.",
+        "note": "Kevin mentioned Sabby's blocked items are primarily savvies items waiting on Joe for operational strategies. This suggests Sabby may be working but tickets are filed under a different name or system."
+      }
     }
-  },
+  ],
   "kevin_cpo_feedback": {
-    "date": "2026-04-06",
-    "source": "Gmail threads from kevin.chelak@jiffyshirts.com (Apr 2-6)",
+    "date": "2026-04-09",
+    "source": "Gmail threads from kevin.chelak@jiffyshirts.com (Mar 31 - Apr 8)",
     "directives": [
-      "Volume without alignment is noise â Strategic Alignment is the primary lens (Mar 31)",
-      "NPS=100 is aspirational north star, not a hard gate for PM scoring; directional month-over-month improvement required (Apr 2)",
+      "Volume without alignment is noise - Strategic Alignment is the primary lens (Mar 31)",
+      "NPS=100 is aspirational north star, not a hard gate; directional MoM improvement required (Apr 2)",
       "CST automation target: 40% by Week 4, 60% by Week 8 per PRD V7 (Apr 2)",
-      "Trailing 30-day outcome window with 2-week attribution delay for honest scoring (Apr 2)",
-      "Jay timeline concern: 6-7 weeks MBR-to-delivery is too slow for AI initiatives (Apr 3)",
-      "Datadog discontinued â Hex or Mixpanel for all business dashboards (Apr 3)",
-      "Ryan designated utility player for P100 support; own Chip 1/4 PRDs deprioritized (Mar 30)",
+      "Trailing 30-day outcome window with 2-week attribution delay (Apr 2)",
+      "Jay timeline concern: 6-7 weeks MBR-to-delivery too slow (Apr 3)",
+      "Datadog discontinued - Hex or Mixpanel for dashboards (Apr 3)",
+      "Ryan designated utility player for P100; Chip 1/4 PRDs deprioritized (Mar 30)",
       "Fraud work ($35K/mo VA fines) integrated into P100 scope (Mar 30)",
       "Mid-April MBR to lead with critical KPIs vs targets by LOB (Mar 30)",
-      "Composite formula locked: Alignment 50% + Outcome 30% + Volume 20% (Kevin/Pete Claw, Apr 2)"
+      "Kevin asking do we have a PM Leaderboard Refresh for April MBR (Apr 6)",
+      "Redraw stuck spike escalated to Jay: 82 net new vs 27 WoW +203.7% (Apr 8)",
+      "Vectorizer.AI: Kevin requesting redraw cost vs AI cost per image breakdown (Apr 8)",
+      "P100 dailies canceled Apr 14-16 for MBR in Dallas (Apr 8)",
+      "ScoutAPM observability platform under evaluation, Purchase Request Form required (Apr 8)",
+      "NPS negative rating from customer flagged for immediate follow-up (Apr 7)",
+      "Video production target: 100 videos this week including Meta metrics (Apr 8)"
     ],
     "priority_shifts": [
+      "April MBR presentation prep is the immediate priority (week of Apr 13 in Dallas)",
       "MBR KPI targets now source-traced with green/yellow/red coding",
-      "Kyle confident on PRD work reacting to Chris's 84-page color consistency doc",
-      "274 active P100 tickets across 7 Jira boards, 45 needing immediate prioritization"
+      "274 active P100 tickets across 7 Jira boards, 45 needing immediate prioritization",
+      "Redraw stuck operational risk - potential new bug in imaging pipeline"
     ]
   },
   "data_gaps": [
-    "Confluence: No MCP connector â PRD counts by PM, GStack pass data, and hardening doc status not pulled",
-    "Slack: No MCP connector â 'PRD/spec/ship/launched' validation not performed",
-    "Sabby Singh: Zero Jira data â account name mismatch or onboarding. Cannot score.",
-    "AI Leverage: No direct Claude/AI session data available for any PM. Scored using proxy signals (AI-native work products).",
-    "Story Points: Jira search view did not expose SP data. Velocity scored on ticket counts, not SP.",
-    "Exec Prompt Scores: No PM has visible Exec Readiness Prompt scoring data in Google Drive. All PMs received -15 penalty."
-  ],
-  "rules": {
-    "nps_treatment": "Directional improvement, not absolute threshold. Month-over-month gains toward 100.",
-    "outcome_lag": "Trailing 30-day window, updated weekly, 2-week attribution delay.",
-    "ratchet_rule": "Green floor rises 5%/week from 67.6 baseline. Week 5 = 86.3.",
-    "onboarding_rule": "New PMs or PMs with zero Jira data classified as Onboarding, not Red."
-  }
+    "Jira: No MCP connector - used prior pull from Apr 6 (3 days old). Scores may not reflect very recent ticket activity.",
+    "Confluence: No MCP connector - PRD counts by PM, GStack pass data not pulled",
+    "Slack: No MCP connector - validation of shipped items not performed",
+    "Sabby Singh: Zero Jira data - account name mismatch or onboarding. Cannot score.",
+    "AI Leverage: No direct Claude/AI session data. Scored using proxy signals (AI-native work products).",
+    "Story Points: Jira SP data not refreshed. Velocity scored on ticket counts from prior pull.",
+    "Exec Prompt Scores: No PM has visible Exec Readiness scoring data. All received -15 penalty risk."
+  ]
 }
